@@ -10,11 +10,12 @@ namespace Asteroids.Utils
 {
     public static class Helpers
     {
+        public static GraphicsDeviceManager gfx;
+
         public static List<Bullet> bullets = new List<Bullet> ();
 
         public static List<SpaceRock> spaceRocks = new List<SpaceRock> ();
 
-        public static GraphicsDeviceManager gfx;
         public static Vector2 HandleScreenWrap(Vector2 objectPos)
         {
             if (objectPos.X > gfx.PreferredBackBufferWidth + 20)

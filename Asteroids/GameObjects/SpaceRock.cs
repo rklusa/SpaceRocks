@@ -24,16 +24,6 @@ namespace Asteroids.GameObjects
             verts = Generate();
 
             angle = 0;
-
-            //verts = new Vector2[]
-            //{
-               // new Vector2(10, 10),
-               // new Vector2(10, -10),
-               // new Vector2(-10, -10),
-               // new Vector2(-10, 10)
-            //};
-
-
         }
 
         public void Update(float deltaTime)
@@ -47,18 +37,16 @@ namespace Asteroids.GameObjects
 
         public void Draw(SpriteBatch batch)
         {
-            //batch.DrawPolygon(position, verts, Color.White, true);
-
             Vector2[] newVerts = new Vector2[verts.Length];
 
             for (int i = 0; i < verts.Length; i++)
             {
                 newVerts[i] = HandleRotation(verts[i], angle);
             }
-
             batch.DrawPolygon(position, newVerts, true);
         }
 
+        // old shape generation algorithim not in use currently
         public Vector2[] GenerateShape()
         {
             int numOfVerts = 10;

@@ -11,7 +11,6 @@ namespace Asteroids
 {
     public class Game1 : Game
     {
-        //private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Ship player;
         private SpaceRock rock;
@@ -24,7 +23,6 @@ namespace Asteroids
         public Game1()
         {
             Helpers.gfx = new GraphicsDeviceManager(this);
-            //_graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -36,7 +34,6 @@ namespace Asteroids
 
             player = new Ship(width / 2, height / 2);
             rock = new SpaceRock(new Vector2(100, 100));
-
 
             base.Initialize();
         }
