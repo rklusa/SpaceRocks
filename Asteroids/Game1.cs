@@ -14,7 +14,7 @@ namespace Asteroids
         //private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Ship player;
-        private Bullet bull;
+        private SpaceRock rock;
 
         private float width;
         private float height;
@@ -35,7 +35,8 @@ namespace Asteroids
             height = Helpers.gfx.PreferredBackBufferHeight;
 
             player = new Ship(width / 2, height / 2);
-            bull = new Bullet(new Vector2(20, 20), new Vector2(0, 0));
+            rock = new SpaceRock(new Vector2(100, 100));
+
 
             base.Initialize();
         }
@@ -53,6 +54,8 @@ namespace Asteroids
             delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             player.Update(delta);
+
+            rock.Update(delta);
 
             foreach(Bullet obj in Helpers.bullets.ToList())
             {
@@ -74,12 +77,13 @@ namespace Asteroids
             _spriteBatch.Begin();
 
             player.Draw(_spriteBatch);
+
+            rock.Draw(_spriteBatch);
             
             foreach(Bullet obj in Helpers.bullets.ToList())
             {
                 obj.Draw(_spriteBatch);
             }
-            //bull.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
