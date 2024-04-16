@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using Utility.Drawing;
 using Asteroids.Utils;
+using System.Diagnostics;
 
 namespace Asteroids.GameObjects
 {
@@ -86,6 +87,8 @@ namespace Asteroids.GameObjects
             position = Helpers.HandleScreenWrap(position);
 
             oldKey = key;
+
+            Debug.WriteLine("angle:" + angle);
         }
 
         public void Draw(SpriteBatch batch) 

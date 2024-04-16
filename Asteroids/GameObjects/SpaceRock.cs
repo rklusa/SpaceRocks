@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Asteroids.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,18 @@ namespace Asteroids.GameObjects
     {
         private Vector2 position;
         private Vector2 forward;
+        private Vector2 rotation;
         private float angle;
+        private float rot;
         private Vector2[] verts;
+        private Random rndDirection = new Random();
         public SpaceRock(Vector2 pos) 
         {
             position = pos;
 
             verts = Generate();
 
-            angle = 0;
+            angle = rndDirection.Next(0, 7);
         }
 
         public void Update(float deltaTime)
@@ -32,7 +36,15 @@ namespace Asteroids.GameObjects
             forward.Y = (float)MathF.Sin(angle);
             forward.Normalize();
 
-            angle += 1f * deltaTime;
+            rotation.X = (float)MathF.Cos(rot);
+            rotation.Y = (float)MathF.Sin(rot);
+            rotation.Normalize();
+
+
+            position += forward * 1f;
+            rot += 1f * deltaTime;
+
+            position = Helpers.HandleScreenWrap(position);
         }
 
         public void Draw(SpriteBatch batch)
@@ -41,7 +53,7 @@ namespace Asteroids.GameObjects
 
             for (int i = 0; i < verts.Length; i++)
             {
-                newVerts[i] = HandleRotation(verts[i], angle);
+                newVerts[i] = HandleRotation(verts[i], rot);
             }
             batch.DrawPolygon(position, newVerts, true);
         }
@@ -78,7 +90,7 @@ namespace Asteroids.GameObjects
 
         public Vector2[] Generate()
         {
-            int numVerts = 10;
+            int numVerts = 6;
             Vector2[] genVerts = new Vector2[numVerts];
             Random rand = new Random();
 
@@ -99,7 +111,7 @@ namespace Asteroids.GameObjects
 
         public Vector2 HandleRotation(Vector2 newVert, float angle)
         {
-            angle = (float)(Math.Atan2(forward.Y, forward.X) * 180 / Math.PI);
+            angle = (float)(Math.Atan2(rotation.Y, rotation.X) * 180 / Math.PI);
 
             float radians = (float)Math.PI * angle / 180f;
             float sin = (float)Math.Sin(radians);
