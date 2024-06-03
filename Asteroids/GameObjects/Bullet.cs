@@ -7,11 +7,10 @@ namespace Asteroids.GameObjects
 {
     public class Bullet
     {
-        private Vector2 position;
+        public Vector2 position;
         private Vector2 forward;
         private float width;
         private float height;
-
         public bool isAlive;
 
         public Bullet(Vector2 pos, Vector2 dir)

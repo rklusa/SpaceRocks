@@ -16,7 +16,7 @@ namespace Asteroids.GameObjects
         private Vector2[] verts;
         private Vector2[] thrustVerts;
 
-        private Vector2 position;
+        public Vector2 position;
         private Vector2 forward;
         private Vector2 velocity;
         private float angle;
@@ -88,7 +88,7 @@ namespace Asteroids.GameObjects
 
             oldKey = key;
 
-            Debug.WriteLine("angle:" + angle);
+            //Debug.WriteLine("angle:" + angle);
         }
 
         public void Draw(SpriteBatch batch) 

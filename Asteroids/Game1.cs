@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame;
+using System.Diagnostics;
 using System.Linq;
 using Utility.Drawing;
 
@@ -33,7 +34,8 @@ namespace Asteroids
             height = Helpers.gfx.PreferredBackBufferHeight;
 
             player = new Ship(width / 2, height / 2);
-            rock = new SpaceRock(new Vector2(100, 100));
+            rock = new SpaceRock();
+            Helpers.spaceRocks.Add(rock);
 
             base.Initialize();
         }
@@ -52,13 +54,31 @@ namespace Asteroids
 
             player.Update(delta);
 
-            rock.Update(delta);
+            //rock.Update(delta);
+
+            foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
+            {
+                rock.Update(delta);
+                if (Helpers.CircleOverlap(player.position,rock.position, 26))
+                {
+                    Debug.WriteLine("the ship hit a rock!");
+                }
+            }
 
             foreach(Bullet obj in Helpers.bullets.ToList())
             {
                 if (!obj.isAlive)
                 {
                     Helpers.bullets.Remove(obj);
+                }
+
+                foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
+                {
+                    if (Helpers.CircleOverlap(obj.position, rock.position, 26))
+                    {
+                        obj.isAlive = false;
+                        rock.isAlive = false;
+                    }
                 }
 
                 obj.Update(delta);

@@ -39,5 +39,10 @@ namespace Asteroids.Utils
                 return objectPos;
             }
         }
+
+        public static bool CircleOverlap(Vector2 point, Vector2 center, float radius)
+        {
+            return (point - center).Length() < radius + radius;
+        }
     }
 }

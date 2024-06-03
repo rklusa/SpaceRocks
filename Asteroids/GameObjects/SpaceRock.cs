@@ -14,48 +14,58 @@ namespace Asteroids.GameObjects
 {
     public class SpaceRock
     {
-        private Vector2 position;
+        public Vector2 position;
         private Vector2 forward;
         private Vector2 rotation;
         private float angle;
         private float rot;
         private Vector2[] verts;
         private Random rand = new Random();
-        public SpaceRock(Vector2 pos) 
+
+        public bool isAlive;
+
+        public SpaceRock() 
         {
             verts = Generate();
 
-            position = SpawnRock(pos);
+            position = SpawnRock(position);
 
             angle = rand.Next(0, 7);
+
+            isAlive = true;
         }
 
         public void Update(float deltaTime)
         {
-            forward.X = (float)MathF.Cos(angle);
-            forward.Y = (float)MathF.Sin(angle);
-            forward.Normalize();
+            if (isAlive)
+            {
+                forward.X = (float)MathF.Cos(angle);
+                forward.Y = (float)MathF.Sin(angle);
+                forward.Normalize();
 
-            rotation.X = (float)MathF.Cos(rot);
-            rotation.Y = (float)MathF.Sin(rot);
-            rotation.Normalize();
+                rotation.X = (float)MathF.Cos(rot);
+                rotation.Y = (float)MathF.Sin(rot);
+                rotation.Normalize();
 
-            position += forward * 1f;
-            rot += 1f * deltaTime;
+                position += forward * 1f;
+                rot += 1f * deltaTime;
 
-            position = Helpers.HandleScreenWrap(position);
+                position = Helpers.HandleScreenWrap(position);
+            }
         }
 
         public void Draw(SpriteBatch batch)
         {
-            Vector2[] newVerts = new Vector2[verts.Length];
-
-            for (int i = 0; i < verts.Length; i++)
+            if(isAlive) 
             {
-                newVerts[i] = HandleRotation(verts[i], rot);
-            }
-            batch.DrawPolygon(position, newVerts, true);
+                Vector2[] newVerts = new Vector2[verts.Length];
 
+                for (int i = 0; i < verts.Length; i++)
+                {
+                    newVerts[i] = HandleRotation(verts[i], rot);
+                }
+                batch.DrawPolygon(position, newVerts, true);
+            }
         }
 
         // old shape generation algorithim not in use currently
