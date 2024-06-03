@@ -20,19 +20,14 @@ namespace Asteroids.GameObjects
         private float angle;
         private float rot;
         private Vector2[] verts;
-        private Random rndDirection = new Random();
-        private Random r = new Random();
+        private Random rand = new Random();
         public SpaceRock(Vector2 pos) 
         {
-            
-
             verts = Generate();
 
             position = SpawnRock(pos);
 
-            angle = rndDirection.Next(0, 7);
-
-
+            angle = rand.Next(0, 7);
         }
 
         public void Update(float deltaTime)
@@ -45,8 +40,7 @@ namespace Asteroids.GameObjects
             rotation.Y = (float)MathF.Sin(rot);
             rotation.Normalize();
 
-
-            //position += forward * 1f;
+            position += forward * 1f;
             rot += 1f * deltaTime;
 
             position = Helpers.HandleScreenWrap(position);
@@ -98,9 +92,8 @@ namespace Asteroids.GameObjects
         {
             int numVerts = 6;
             Vector2[] genVerts = new Vector2[numVerts];
-            Random rand = new Random();
 
-            float deg = 0;
+            float deg;
             float radius = 25;
 
             for (int i = 0; i < genVerts.Length; i++)
@@ -133,35 +126,33 @@ namespace Asteroids.GameObjects
 
         public Vector2 SpawnRock(Vector2 pos)
         {
-            int width = Helpers.gfx.PreferredBackBufferWidth;
-            int height = Helpers.gfx.PreferredBackBufferHeight;
-            int p = (2 * height) + (2 * width);
+            int w = Helpers.gfx.PreferredBackBufferWidth;
+            int h = Helpers.gfx.PreferredBackBufferHeight;
+            int p = (2 * h) + (2 * w);
 
             Rectangle spawnRect = new Rectangle(20, 20, Helpers.gfx.PreferredBackBufferWidth - 40, Helpers.gfx.PreferredBackBufferHeight - 40);
 
-            float randEdge = (float)r.NextDouble() * p;
+            float randEdge = (float)rand.NextDouble() * p;
 
-            if (randEdge < height)
+            if (randEdge < h)
             {
                 //left side
-                pos = new Vector2(spawnRect.Left, spawnRect.Bottom + height);
-                //pos = new Vector2((randEdge % width) + spawnRect.X, spawnRect.Y);
+                pos = new Vector2(spawnRect.Left, spawnRect.Bottom + h);
             }
-            else if (randEdge < height + width) 
+            else if (randEdge < h + w) 
             {
                 //top side
-                pos = new Vector2(spawnRect.Right + randEdge - height, spawnRect.Bottom + spawnRect.Size.Y);
-                //pos = new Vector2(spawnRect.Width, (randEdge % width));
+                pos = new Vector2(spawnRect.Right + randEdge - h, spawnRect.Bottom + spawnRect.Size.Y);
             }
-            else if (randEdge < height + width + height)
+            else if (randEdge < h + w + h)
             {
                 // right side
-                pos = new Vector2(spawnRect.Right + spawnRect.Width, spawnRect.Top + randEdge - (height + width));
+                pos = new Vector2(spawnRect.Right + spawnRect.Width, spawnRect.Top + randEdge - (h + w));
             }
             else
             {
                 //bottom side
-                pos = new Vector2(spawnRect.Left + randEdge - (height + width + height), spawnRect.Top);
+                pos = new Vector2(spawnRect.Left + randEdge - (h + w + h), spawnRect.Top);
             }
 
             return pos;
