@@ -21,13 +21,18 @@ namespace Asteroids.GameObjects
         private float rot;
         private Vector2[] verts;
         private Random rndDirection = new Random();
+        private Random r = new Random();
         public SpaceRock(Vector2 pos) 
         {
-            position = pos;
+            
 
             verts = Generate();
 
+            position = SpawnRock(pos);
+
             angle = rndDirection.Next(0, 7);
+
+
         }
 
         public void Update(float deltaTime)
@@ -41,7 +46,7 @@ namespace Asteroids.GameObjects
             rotation.Normalize();
 
 
-            position += forward * 1f;
+            //position += forward * 1f;
             rot += 1f * deltaTime;
 
             position = Helpers.HandleScreenWrap(position);
@@ -56,6 +61,7 @@ namespace Asteroids.GameObjects
                 newVerts[i] = HandleRotation(verts[i], rot);
             }
             batch.DrawPolygon(position, newVerts, true);
+
         }
 
         // old shape generation algorithim not in use currently
@@ -123,6 +129,42 @@ namespace Asteroids.GameObjects
             newVert.Y = (float)(tempx * sin) + (tempy * cos);
 
             return newVert;
+        }
+
+        public Vector2 SpawnRock(Vector2 pos)
+        {
+            int width = Helpers.gfx.PreferredBackBufferWidth;
+            int height = Helpers.gfx.PreferredBackBufferHeight;
+            int p = (2 * height) + (2 * width);
+
+            Rectangle spawnRect = new Rectangle(20, 20, Helpers.gfx.PreferredBackBufferWidth - 40, Helpers.gfx.PreferredBackBufferHeight - 40);
+
+            float randEdge = (float)r.NextDouble() * p;
+
+            if (randEdge < height)
+            {
+                //left side
+                pos = new Vector2(spawnRect.Left, spawnRect.Bottom + height);
+                //pos = new Vector2((randEdge % width) + spawnRect.X, spawnRect.Y);
+            }
+            else if (randEdge < height + width) 
+            {
+                //top side
+                pos = new Vector2(spawnRect.Right + randEdge - height, spawnRect.Bottom + spawnRect.Size.Y);
+                //pos = new Vector2(spawnRect.Width, (randEdge % width));
+            }
+            else if (randEdge < height + width + height)
+            {
+                // right side
+                pos = new Vector2(spawnRect.Right + spawnRect.Width, spawnRect.Top + randEdge - (height + width));
+            }
+            else
+            {
+                //bottom side
+                pos = new Vector2(spawnRect.Left + randEdge - (height + width + height), spawnRect.Top);
+            }
+
+            return pos;
         }
     }
 }
