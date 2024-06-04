@@ -11,6 +11,7 @@ namespace Asteroids
     public class Game1 : Game
     {
         private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
         private Ship player;
         private SpaceRock rock;
 
@@ -18,6 +19,8 @@ namespace Asteroids
         private float height;
 
         private float delta; // delta time
+
+        private bool menuActive = true;
 
         public Game1()
         {
@@ -41,19 +44,55 @@ namespace Asteroids
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _font = Content.Load<SpriteFont>("Font");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
-            delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (menuActive)
+            {
 
-            player.Update(delta);
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    menuActive = false;
+                }
+            }
+            else
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                {
+                    menuActive = true;
+                }
 
-            foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
-            { 
+                delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                player.Update(delta);
+
+                
+
+                foreach (Bullet obj in Helpers.bullets.ToList())
+                {
+                    if (!obj.isAlive)
+                    {
+                        Helpers.bullets.Remove(obj);
+                    }
+
+                    foreach (SpaceRock rock in Helpers.spaceRocks.ToList())
+                    {
+                        if (Helpers.CircleOverlap(obj.position, rock.position, rock.size + 1))
+                        {
+                            obj.isAlive = false;
+                            rock.isAlive = false;
+                        }
+                    }
+
+                    obj.Update(delta);
+                }
+            }
+
+            foreach (SpaceRock rock in Helpers.spaceRocks.ToList())
+            {
 
                 if (!rock.isAlive)
                 {
@@ -66,32 +105,16 @@ namespace Asteroids
                 }
 
                 rock.Update(delta);
-                if (Helpers.CircleOverlap(player.position,rock.position, rock.size + 1))
+
+                if (Helpers.CircleOverlap(player.position, rock.position, rock.size + 1))
                 {
                     // todo: add lives mechanic for when player gets hit by an asteroid
+                    menuActive = true;
                     Debug.WriteLine("the ship hit a rock!");
                 }
             }
 
-            foreach(Bullet obj in Helpers.bullets.ToList())
-            {
-                if (!obj.isAlive)
-                {
-                    Helpers.bullets.Remove(obj);
-                }
-
-                foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
-                {
-                    if (Helpers.CircleOverlap(obj.position, rock.position, rock.size + 1))
-                    {
-                        obj.isAlive = false;
-                        rock.isAlive = false;
-                    }
-                }
-
-                obj.Update(delta);
-            }
-
+            Debug.WriteLine("menuActive:" + menuActive);
             base.Update(gameTime);
         }
 
@@ -101,16 +124,24 @@ namespace Asteroids
 
             _spriteBatch.Begin();
 
-            player.Draw(_spriteBatch);
+            if (menuActive)
+            {
+                _spriteBatch.DrawString(_font, "Space Rocks", new Vector2(width / 3, height / 3), Color.White);
+                _spriteBatch.DrawString(_font, "Press Space to Play.", new Vector2(width / 4, height / 2), Color.White);
+            }
+            else
+            {
+                player.Draw(_spriteBatch);
 
-            foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
+                foreach (Bullet obj in Helpers.bullets.ToList())
+                {
+                    obj.Draw(_spriteBatch);
+                }
+            }
+
+            foreach (SpaceRock rock in Helpers.spaceRocks.ToList())
             {
                 rock.Draw(_spriteBatch);
-            }
-            
-            foreach(Bullet obj in Helpers.bullets.ToList())
-            {
-                obj.Draw(_spriteBatch);
             }
 
             _spriteBatch.End();
