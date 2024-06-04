@@ -34,7 +34,7 @@ namespace Asteroids
             height = Helpers.gfx.PreferredBackBufferHeight;
 
             player = new Ship(width / 2, height / 2);
-            rock = new SpaceRock();
+            rock = new SpaceRock(25, Vector2.Zero);
             Helpers.spaceRocks.Add(rock);
 
             base.Initialize();
@@ -54,13 +54,23 @@ namespace Asteroids
 
             player.Update(delta);
 
-            //rock.Update(delta);
-
             foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
-            {
-                rock.Update(delta);
-                if (Helpers.CircleOverlap(player.position,rock.position, 26))
+            { 
+
+                if (!rock.isAlive)
                 {
+                    if (rock.size > 20)
+                    {
+                        spawnRockFragments(rock.size / 2, rock.position);
+                    }
+
+                    Helpers.spaceRocks.Remove(rock);
+                }
+
+                rock.Update(delta);
+                if (Helpers.CircleOverlap(player.position,rock.position, rock.size + 1))
+                {
+                    // todo: add lives mechanic for when player gets hit by an asteroid
                     Debug.WriteLine("the ship hit a rock!");
                 }
             }
@@ -74,10 +84,11 @@ namespace Asteroids
 
                 foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
                 {
-                    if (Helpers.CircleOverlap(obj.position, rock.position, 26))
+                    if (Helpers.CircleOverlap(obj.position, rock.position, rock.size + 1))
                     {
                         obj.isAlive = false;
                         rock.isAlive = false;
+
                     }
                 }
 
@@ -96,6 +107,10 @@ namespace Asteroids
             player.Draw(_spriteBatch);
 
             rock.Draw(_spriteBatch);
+            foreach(SpaceRock rock in Helpers.spaceRocks.ToList() )
+            {
+                rock.Draw(_spriteBatch);
+            }
             
             foreach(Bullet obj in Helpers.bullets.ToList())
             {
@@ -105,6 +120,15 @@ namespace Asteroids
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void spawnRockFragments(float size, Vector2 pos)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                SpaceRock rock = new SpaceRock(size, pos);
+                Helpers.spaceRocks.Add(rock);
+            }
         }
     }
 }

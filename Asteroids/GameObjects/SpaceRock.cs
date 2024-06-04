@@ -22,16 +22,24 @@ namespace Asteroids.GameObjects
         private Vector2[] verts;
         private Random rand = new Random();
 
+        public float size;
         public bool isAlive;
 
-        public SpaceRock() 
+        public SpaceRock(float radius, Vector2 Pos) 
         {
-            verts = Generate();
+            verts = Generate(radius);
+            size = radius;
 
-            position = SpawnRock(position);
+            if (Pos == Vector2.Zero) 
+            {
+                position = SpawnRock(position);
+            }
+            else
+            {
+                position = Pos;
+            }
 
             angle = rand.Next(0, 7);
-
             isAlive = true;
         }
 
@@ -98,20 +106,20 @@ namespace Asteroids.GameObjects
             return generatedVerts;
         }
 
-        public Vector2[] Generate()
+        public Vector2[] Generate(float radius)
         {
             int numVerts = 6;
             Vector2[] genVerts = new Vector2[numVerts];
 
             float deg;
-            float radius = 25;
+            float r = radius;
 
             for (int i = 0; i < genVerts.Length; i++)
             {
                 deg = i * (360 / numVerts);
                 float radian = ((int)(deg * (Math.PI / 180)));
-                float x = (int)(radius * Math.Cos(radian));
-                float y = (int)(radius * Math.Sin(radian));
+                float x = (int)(r * Math.Cos(radian));
+                float y = (int)(r * Math.Sin(radian));
                 genVerts[i].X = x;
                 genVerts[i].Y = y;
             }
