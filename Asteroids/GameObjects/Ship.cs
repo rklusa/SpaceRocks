@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using Utility.Drawing;
 using Asteroids.Utils;
-using System.Diagnostics;
 
 namespace Asteroids.GameObjects
 {

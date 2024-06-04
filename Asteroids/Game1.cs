@@ -3,10 +3,8 @@ using Asteroids.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame;
-using System.Diagnostics;
 using System.Linq;
-using Utility.Drawing;
+using System.Diagnostics;
 
 namespace Asteroids
 {
@@ -88,7 +86,6 @@ namespace Asteroids
                     {
                         obj.isAlive = false;
                         rock.isAlive = false;
-
                     }
                 }
 
@@ -106,8 +103,7 @@ namespace Asteroids
 
             player.Draw(_spriteBatch);
 
-            rock.Draw(_spriteBatch);
-            foreach(SpaceRock rock in Helpers.spaceRocks.ToList() )
+            foreach(SpaceRock rock in Helpers.spaceRocks.ToList())
             {
                 rock.Draw(_spriteBatch);
             }
