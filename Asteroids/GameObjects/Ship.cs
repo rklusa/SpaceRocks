@@ -86,8 +86,6 @@ namespace Asteroids.GameObjects
             position = Helpers.HandleScreenWrap(position);
 
             oldKey = key;
-
-            //Debug.WriteLine("angle:" + angle);
         }
 
         public void Draw(SpriteBatch batch) 
@@ -109,7 +107,6 @@ namespace Asteroids.GameObjects
                 {
                     batch.DrawPolygon(position, newThrustVerts, true);
                 }
-                
             }
         }
 

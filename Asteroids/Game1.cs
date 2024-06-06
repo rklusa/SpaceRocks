@@ -37,7 +37,7 @@ namespace Asteroids
             height = Helpers.gfx.PreferredBackBufferHeight;
 
             player = new Ship(width / 2, height / 2);
-            currentRound = 0;
+            currentRound = 1;
             Helpers.SpawnRocks(currentRound);
 
             base.Initialize();
