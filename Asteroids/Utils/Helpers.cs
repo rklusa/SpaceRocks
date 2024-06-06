@@ -40,5 +40,24 @@ namespace Asteroids.Utils
         {
             return (point - center).Length() < radius + radius;
         }
+
+        public static void spawnRockFragments(float size, Vector2 pos)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                SpaceRock rock = new SpaceRock(size, pos);
+                Helpers.spaceRocks.Add(rock);
+            }
+        }
+
+        public static void SpawnRocks(int currWave)
+        {
+
+            for (int i =0; i < (currWave * 2); i++)
+            {
+                SpaceRock rock = new SpaceRock(25, Vector2.Zero);
+                Helpers.spaceRocks.Add(rock);
+            }
+        }
     }
 }

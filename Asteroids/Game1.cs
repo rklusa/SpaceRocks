@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Asteroids
 {
@@ -21,6 +22,7 @@ namespace Asteroids
         private float delta; // delta time
 
         private bool menuActive = true;
+        private int currentRound;
 
         public Game1()
         {
@@ -35,8 +37,8 @@ namespace Asteroids
             height = Helpers.gfx.PreferredBackBufferHeight;
 
             player = new Ship(width / 2, height / 2);
-            rock = new SpaceRock(25, Vector2.Zero);
-            Helpers.spaceRocks.Add(rock);
+            currentRound = 0;
+            Helpers.SpawnRocks(currentRound);
 
             base.Initialize();
         }
@@ -49,7 +51,6 @@ namespace Asteroids
 
         protected override void Update(GameTime gameTime)
         {
-
             if (menuActive)
             {
 
@@ -66,10 +67,13 @@ namespace Asteroids
                 }
 
                 delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
                 player.Update(delta);
 
-                
+                if (Helpers.spaceRocks.Count == 0)
+                {
+                    currentRound += 1;
+                    Helpers.SpawnRocks(currentRound);
+                }
 
                 foreach (Bullet obj in Helpers.bullets.ToList())
                 {
@@ -98,7 +102,7 @@ namespace Asteroids
                 {
                     if (rock.size > 20)
                     {
-                        spawnRockFragments(rock.size / 2, rock.position);
+                        Helpers.spawnRockFragments(rock.size / 2, rock.position);
                     }
 
                     Helpers.spaceRocks.Remove(rock);
@@ -108,13 +112,10 @@ namespace Asteroids
 
                 if (Helpers.CircleOverlap(player.position, rock.position, rock.size + 1))
                 {
-                    // todo: add lives mechanic for when player gets hit by an asteroid
-                    menuActive = true;
-                    Debug.WriteLine("the ship hit a rock!");
+                    RestartGame();
                 }
             }
 
-            Debug.WriteLine("menuActive:" + menuActive);
             base.Update(gameTime);
         }
 
@@ -128,9 +129,13 @@ namespace Asteroids
             {
                 _spriteBatch.DrawString(_font, "Space Rocks", new Vector2(width / 3, height / 3), Color.White);
                 _spriteBatch.DrawString(_font, "Press Space to Play.", new Vector2(width / 4, height / 2), Color.White);
+                
             }
             else
             {
+                string waveString = "Wave:" + currentRound.ToString();
+                _spriteBatch.DrawString(_font, waveString, new Vector2(10, 10), Color.White);
+
                 player.Draw(_spriteBatch);
 
                 foreach (Bullet obj in Helpers.bullets.ToList())
@@ -149,13 +154,13 @@ namespace Asteroids
             base.Draw(gameTime);
         }
 
-        private void spawnRockFragments(float size, Vector2 pos)
+        private void RestartGame()
         {
-            for (int i = 0; i < 2; i++)
-            {
-                SpaceRock rock = new SpaceRock(size, pos);
-                Helpers.spaceRocks.Add(rock);
-            }
+            currentRound = 0;
+            player.position = new Vector2(width / 2, height / 2);
+            Helpers.spaceRocks = new List<SpaceRock>();
+            Helpers.SpawnRocks(currentRound);
+            menuActive = true;
         }
     }
 }
