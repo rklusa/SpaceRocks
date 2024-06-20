@@ -49,7 +49,6 @@ namespace Asteroids.Utils
                 Helpers.spaceRocks.Add(rock);
             }
         }
-
         public static void SpawnRocks(int currWave)
         {
 

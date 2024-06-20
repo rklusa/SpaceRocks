@@ -22,6 +22,7 @@ namespace Asteroids.GameObjects
 
             isAlive = true;
         }
+
         public void Update(float deltaTime)
         {
             if (isAlive)

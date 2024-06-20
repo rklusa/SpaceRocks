@@ -71,36 +71,6 @@ namespace Asteroids.GameObjects
             }
         }
 
-        // old shape generation algorithim not in use currently
-        public Vector2[] GenerateShape()
-        {
-            int numOfVerts = 10;
-            int radius = 25;
-            int radiusMax = 5;
-            int radiusMin = 15;
-            int angle = 0;
-            int r = 0;
-
-            Random rand = new Random();
-
-            Vector2[] generatedVerts = new Vector2[numOfVerts];
-
-            generatedVerts[0] = new Vector2(radius, 0);
-
-            for (int i = 1; i < generatedVerts.Length; i++)
-            {
-                r = rand.Next(radius - radiusMin, radius + radiusMax);
-
-                angle = (int)(((Math.PI * 2) / numOfVerts) * i);
-
-                angle *= 2;
-
-                generatedVerts[i] = new Vector2(r, angle);
-            }
-
-            return generatedVerts;
-        }
-
         public Vector2[] Generate(float radius)
         {
             int numVerts = 6;
