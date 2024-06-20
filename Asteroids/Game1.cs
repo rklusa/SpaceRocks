@@ -128,7 +128,7 @@ namespace Asteroids
             if (menuActive)
             {
                 _spriteBatch.DrawString(_font, "Space Rocks", new Vector2(width / 3, height / 3), Color.White);
-                _spriteBatch.DrawString(_font, "Press Space to Play.", new Vector2(width / 4, height / 2), Color.White);
+                _spriteBatch.DrawString(_font, "Press Space to Play.", new Vector2(width / 3, height / 2), Color.White);
                 
             }
             else
